@@ -38,7 +38,7 @@ export default function CenterMenu({ viewMode, toggleViewMode, onReset, onToSetu
           >
             {viewMode === 'tabletop' ? <Tablet size={24} /> : <Monitor size={24} />}
             <span className="tooltip">
-              {viewMode === 'tabletop' ? 'Tabletop Mode' : 'TV Mode'}
+              {viewMode === 'tabletop' ? 'Modo Mesa' : 'Modo TV'}
             </span>
           </button>
 
@@ -47,7 +47,7 @@ export default function CenterMenu({ viewMode, toggleViewMode, onReset, onToSetu
             onClick={() => { onReset(); setIsOpen(false); }}
           >
             <RotateCcw size={24} />
-            <span className="tooltip">Reset Game</span>
+            <span className="tooltip">Reiniciar Partida</span>
           </button>
 
           <button 
@@ -55,7 +55,7 @@ export default function CenterMenu({ viewMode, toggleViewMode, onReset, onToSetu
             onClick={() => { onToSetup(); setIsOpen(false); }}
           >
             <Home size={24} />
-            <span className="tooltip">Main Menu</span>
+            <span className="tooltip">Menú Principal</span>
           </button>
 
           <button 
@@ -64,7 +64,7 @@ export default function CenterMenu({ viewMode, toggleViewMode, onReset, onToSetu
             style={{ background: needTieBreak ? 'var(--color-orange)' : '' }}
           >
             <Dices size={24} />
-            <span className="tooltip">{needTieBreak ? 'Tie Break Roll!' : 'Roll Dice (Who starts?)'}</span>
+            <span className="tooltip">{needTieBreak ? '¡Desempate!' : 'Lanzar Dados (¿Quién empieza?)'}</span>
           </button>
 
           {isRolling && (
@@ -74,7 +74,7 @@ export default function CenterMenu({ viewMode, toggleViewMode, onReset, onToSetu
               style={{ background: 'var(--color-red)' }}
             >
               <X size={24} />
-              <span className="tooltip">Close Dice</span>
+              <span className="tooltip">Cerrar Dados</span>
             </button>
           )}
 

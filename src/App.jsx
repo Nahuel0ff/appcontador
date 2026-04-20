@@ -10,7 +10,7 @@ const getDefaultPlayers = (count) => {
   const colors = ['red', 'blue', 'green', 'black', 'purple', 'orange', 'teal', 'pink'];
   return Array.from({ length: count }, (_, i) => ({
     id: i + 1,
-    name: `Player ${i + 1}`,
+    name: `Jugador ${i + 1}`,
     life: DEFAULT_LIFE,
     color: colors[i % colors.length],
     commanderDamage: {}

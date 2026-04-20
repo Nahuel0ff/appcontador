@@ -93,8 +93,8 @@ export default function PlayerZone({
       <div className="dice-overlay animate-in">
         <Dices size={48} className={`dice-icon ${diceState.tiedIds.length > 1 && !isWinner && !isTied ? 'opacity-50' : ''}`} />
         <div className="dice-val text-shadow">{myRoll}</div>
-        {isWinner && <div className="dice-status winner-text"><Crown size={24} /> Starts!</div>}
-        {isTied && <div className="dice-status tied-text">Tied!</div>}
+        {isWinner && <div className="dice-status winner-text"><Crown size={24} /> ¡Empieza!</div>}
+        {isTied && <div className="dice-status tied-text">¡Empate!</div>}
       </div>
     );
   };
@@ -104,7 +104,7 @@ export default function PlayerZone({
       return (
         <div className="dead-overlay animate-in">
           <Skull size={120} className="dead-skull text-shadow" />
-          <div className="dead-text text-shadow">Eliminated</div>
+          <div className="dead-text text-shadow">Eliminado</div>
         </div>
       );
     }
@@ -172,7 +172,7 @@ export default function PlayerZone({
 
           {!diceState?.active && showCommanderMode && (
             <div className={`commander-damage-container ${isDead ? 'opacity-30' : ''}`}>
-              <div className="cd-title text-shadow">Commander Damage Received</div>
+              <div className="cd-title text-shadow">Daño de Comandante Recibido</div>
               <div className="cd-grid">
                 {opponents.map(opp => {
                   const dmg = player.commanderDamage[opp.id] || 0;

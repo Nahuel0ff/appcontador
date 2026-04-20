@@ -16,7 +16,7 @@ export default function PlayerSetup({ playerCount, setPlayerCount, players, setP
         } else {
           newArray.push({
             id: i + 1,
-            name: `Player ${i + 1}`,
+            name: `Jugador ${i + 1}`,
             life: 40,
             color: colors[i % colors.length],
             commanderDamage: {}
@@ -48,7 +48,7 @@ export default function PlayerSetup({ playerCount, setPlayerCount, players, setP
         </div>
         
         <div className="setup-section">
-          <h3>Number of Players</h3>
+          <h3>Número de Jugadores</h3>
           <div className="player-count-buttons">
             {[2, 3, 4, 5, 6, 7, 8].map(num => (
               <button 
@@ -96,7 +96,7 @@ export default function PlayerSetup({ playerCount, setPlayerCount, players, setP
 
         <button className="primary-btn start-btn" onClick={() => onStart(players)}>
           <Play size={24} fill="currentColor" />
-          Start Game
+          Comenzar Partida
         </button>
       </div>
     </div>
