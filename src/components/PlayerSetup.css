@@ -12,7 +12,7 @@
 .setup-card {
   width: 100%;
   max-width: 500px;
-  max-height: 95vh;
+  max-height: 650px;
   padding: 32px;
   display: flex;
   flex-direction: column;
@@ -85,7 +85,27 @@
   flex-grow: 1;
   overflow-y: auto;
   padding-right: 8px;
-  /* Add custom scrollbar styling if needed */
+  
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.setup-players-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.setup-players-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.setup-players-list::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.setup-players-list::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 .setup-player-row {
@@ -169,7 +189,7 @@
   .setup-container {
     padding: 12px;
     align-items: center; /* Keep it perfectly centered! */
-    overflow-y: auto;
+    overflow-y: hidden;
   }
 
   .setup-card {
@@ -178,6 +198,7 @@
     margin: auto; /* Ensures it stays centered even if it needs to scroll */
     margin-top: auto;
     margin-bottom: auto;
+    max-height: 90vh;
   }
 
 
