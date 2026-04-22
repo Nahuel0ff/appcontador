@@ -6,23 +6,13 @@
   justify-content: center;
   background: var(--bg-dark);
   background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 50%);
-}
-
-@media screen and (orientation: portrait) and (max-width: 900px) {
-  .setup-container {
-    transform: rotate(90deg);
-    transform-origin: center center;
-    width: 100vh;
-    height: 100vw;
-    position: absolute;
-    top: calc((100vh - 100vw) / 2);
-    left: calc((100vw - 100vh) / 2);
-  }
+  padding: 16px;
 }
 
 .setup-card {
-  width: 90%;
+  width: 100%;
   max-width: 500px;
+  max-height: 95vh;
   padding: 32px;
   display: flex;
   flex-direction: column;
@@ -55,22 +45,23 @@
 .player-count-buttons {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
 }
 
 .count-btn {
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
   color: var(--text-light);
-  width: 80px;
-  height: 60px;
-  border-radius: 16px;
+  width: 65px;
+  height: 55px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
@@ -91,9 +82,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: 40vh;
+  flex-grow: 1;
   overflow-y: auto;
   padding-right: 8px;
+  /* Add custom scrollbar styling if needed */
 }
 
 .setup-player-row {
@@ -151,13 +143,86 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 8px;
   background: var(--color-green);
   border-color: #4ade80;
   font-size: 1.3rem;
   padding: 16px;
+  border-radius: 12px;
+  color: white;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.2s;
+  flex-shrink: 0;
 }
 
 .start-btn:hover {
   background: #16a34a;
 }
+
+/* -----------------------------
+   RESPONSIVE MOBILE STYLES
+------------------------------ */
+@media screen and (max-width: 600px), screen and (max-height: 700px) {
+  .setup-container {
+    padding: 12px;
+    align-items: center; /* Keep it perfectly centered! */
+    overflow-y: auto;
+  }
+
+  .setup-card {
+    padding: 16px;
+    gap: 16px;
+    margin: auto; /* Ensures it stays centered even if it needs to scroll */
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+
+  .setup-header {
+    padding-bottom: 8px;
+    gap: 8px;
+  }
+
+  .setup-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .setup-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .count-btn {
+    width: 52px;
+    height: 48px;
+    font-size: 1rem;
+  }
+
+  .setup-player-row {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .color-indicator {
+    width: 20px;
+    height: 20px;
+  }
+
+  .setup-name-input {
+    font-size: 1rem;
+  }
+
+  .setup-color-select {
+    padding: 4px;
+    font-size: 0.9rem;
+  }
+  
+  .start-btn {
+    padding: 12px;
+    font-size: 1.1rem;
+  }
+}
+
