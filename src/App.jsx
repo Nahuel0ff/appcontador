@@ -143,8 +143,8 @@ function App() {
       if (p.id === playerId) {
         const currentDamage = p.commanderDamage[opponentId] || 0;
         const newDamage = Math.max(0, currentDamage + amount);
-
-        const newLife = p.life - amount;
+        const actualChange = newDamage - currentDamage;
+        const newLife = p.life - actualChange;
 
         return {
           ...p,
@@ -187,7 +187,7 @@ function App() {
             index={index}
             totalPlayers={players.length}
             viewMode={viewMode}
-            opponents={players.filter(p => p.id !== player.id)}
+            opponents={players.map((p, i) => ({ ...p, originalIndex: i })).filter(p => p.id !== player.id)}
             updateLife={updatePlayerLife}
             updateCommanderDamage={updateCommanderDamage}
             updateName={updatePlayerName}

@@ -47,51 +47,69 @@ export default function PlayerSetup({ playerCount, setPlayerCount, players, setP
           <h2>Magia de Pollas</h2>
         </div>
         
-        <div className="setup-section">
-          <h3>Número de Jugadores</h3>
-          <div className="player-count-buttons">
-            {[2, 3, 4, 5, 6, 7, 8].map(num => (
-              <button 
-                key={num}
-                className={`count-btn ${playerCount === num ? 'active' : ''}`}
-                onClick={() => handleCountChange(num)}
-              >
-                <Users size={20} />
-                {num}
-              </button>
+        <div className="setup-scroll-area">
+          <div className="setup-left-panel">
+            <div className="setup-section">
+              <h3>Número de Jugadores</h3>
+              <div className="player-count-buttons">
+                {[2, 3, 4, 5, 6, 7, 8].map(num => (
+                  <button 
+                    key={num}
+                    className={`count-btn ${playerCount === num ? 'active' : ''}`}
+                    onClick={() => handleCountChange(num)}
+                  >
+                    <Users size={20} />
+                    {num}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="setup-section" style={{ marginTop: '24px' }}>
+              <h3>Disposición de la Mesa</h3>
+              <div className={`setup-table-preview players-grid-${playerCount}`}>
+                {players.map((p) => (
+                  <div 
+                    key={p.id} 
+                    className="setup-preview-seat" 
+                    style={{ backgroundColor: `var(--color-${p.color})` }}
+                    title={p.name}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="setup-players-list">
+            {players.map(p => (
+              <div key={p.id} className="setup-player-row">
+                <div 
+                  className="color-indicator" 
+                  style={{ backgroundColor: `var(--color-${p.color})` }}
+                ></div>
+                <input 
+                  type="text" 
+                  value={p.name} 
+                  onChange={(e) => updateName(p.id, e.target.value)} 
+                  className="setup-name-input"
+                />
+                <select 
+                  value={p.color} 
+                  onChange={(e) => updateColor(p.id, e.target.value)}
+                  className="setup-color-select"
+                >
+                  <option value="red">Rojo</option>
+                  <option value="blue">Azul</option>
+                  <option value="green">Verde</option>
+                  <option value="black">Negro</option>
+                  <option value="purple">Morado</option>
+                  <option value="orange">Naranja</option>
+                  <option value="teal">Turquesa</option>
+                  <option value="pink">Rosa</option>
+                </select>
+              </div>
             ))}
           </div>
-        </div>
-
-        <div className="setup-players-list">
-          {players.map(p => (
-            <div key={p.id} className="setup-player-row">
-              <div 
-                className="color-indicator" 
-                style={{ backgroundColor: `var(--color-${p.color})` }}
-              ></div>
-              <input 
-                type="text" 
-                value={p.name} 
-                onChange={(e) => updateName(p.id, e.target.value)} 
-                className="setup-name-input"
-              />
-              <select 
-                value={p.color} 
-                onChange={(e) => updateColor(p.id, e.target.value)}
-                className="setup-color-select"
-              >
-                <option value="red">Rojo</option>
-                <option value="blue">Azul</option>
-                <option value="green">Verde</option>
-                <option value="black">Negro</option>
-                <option value="purple">Morado</option>
-                <option value="orange">Naranja</option>
-                <option value="teal">Turquesa</option>
-                <option value="pink">Rosa</option>
-              </select>
-            </div>
-          ))}
         </div>
 
         <button className="primary-btn start-btn" onClick={() => onStart(players)}>

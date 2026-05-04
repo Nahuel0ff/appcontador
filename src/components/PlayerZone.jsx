@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Skull, ChevronUp, ChevronDown, Dices, Crown } from 'lucide-react';
+import { Skull, ChevronUp, ChevronDown, Dices, Crown, X } from 'lucide-react';
 import './PlayerZone.css';
 
 export default function PlayerZone({ 
@@ -22,6 +22,29 @@ export default function PlayerZone({
   const diffTimerRef = useRef(null);
 
   const isDead = player.life <= 0 || Object.values(player.commanderDamage).some(dmg => dmg >= 21);
+
+  const cdTouchTimer = useRef(null);
+  const cdIntervalRef = useRef(null);
+  const cdIsHeld = useRef(false);
+
+  const startCdAdjusting = (oppId) => {
+    cdIsHeld.current = false;
+    cdTouchTimer.current = setTimeout(() => {
+      cdIsHeld.current = true;
+      updateCommanderDamage(player.id, oppId, -1);
+      cdIntervalRef.current = setInterval(() => {
+        updateCommanderDamage(player.id, oppId, -1);
+      }, 200);
+    }, 400); // 400ms to trigger hold
+  };
+
+  const stopCdAdjusting = (oppId) => {
+    if (cdTouchTimer.current) clearTimeout(cdTouchTimer.current);
+    if (cdIntervalRef.current) clearInterval(cdIntervalRef.current);
+    if (!cdIsHeld.current && oppId !== undefined) {
+      updateCommanderDamage(player.id, oppId, 1);
+    }
+  };
 
   // Rotation logic for tabletop mode
   const isTopRow = (totalPlayers === 2 && index < 1) || 
@@ -61,6 +84,7 @@ export default function PlayerZone({
   useEffect(() => {
     return () => {
       stopAdjusting();
+      stopCdAdjusting();
       if (diffTimerRef.current) clearTimeout(diffTimerRef.current);
     };
   }, []);
@@ -119,12 +143,9 @@ export default function PlayerZone({
         <div className="player-header">
           <div style={{ display: 'flex', alignItems: 'center', width: '70%' }}>
             {isStartingPlayer && <Crown size={24} className="text-shadow animate-in" style={{ color: '#fbbf24', marginRight: '8px', flexShrink: 0 }} />}
-            <input 
-              className="player-name text-shadow" 
-              value={player.name} 
-              onChange={(e) => updateName(player.id, e.target.value)}
-              style={{ width: '100%' }}
-            />
+            <div className="player-name text-shadow" style={{ width: '100%' }}>
+              {player.name}
+            </div>
           </div>
           <button 
             className={`cmd-toggle-btn ${showCommanderMode ? 'active' : ''}`}
@@ -171,34 +192,62 @@ export default function PlayerZone({
           )}
 
           {!diceState?.active && showCommanderMode && (
-            <div className={`commander-damage-container ${isDead ? 'opacity-30' : ''}`}>
-              <div className="cd-title text-shadow">Daño de Comandante Recibido</div>
-              <div className="cd-grid">
-                {opponents.map(opp => {
-                  const dmg = player.commanderDamage[opp.id] || 0;
-                  return (
-                    <div key={opp.id} className="cd-opponent text-shadow" style={{ '--opp-color': `var(--color-${opp.color})` }}>
-                      <div className="cd-opp-name">{opp.name}</div>
-                      <div className="cd-controls">
-                        <button 
-                          className="cd-btn" 
-                          onClick={() => updateCommanderDamage(player.id, opp.id, -1)}
-                        >
-                          <ChevronDown size={28} />
-                        </button>
-                        <span className="cd-val">{dmg}</span>
-                        <button 
-                          className="cd-btn" 
-                          onClick={() => updateCommanderDamage(player.id, opp.id, 1)}
-                        >
-                          <ChevronUp size={28} />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+            <>
+              <button 
+                className="cd-backdrop" 
+                onClick={() => setShowCommanderMode(false)}
+              />
+              <div 
+                className={`commander-damage-container ${isDead ? 'opacity-30' : ''}`}
+                onClick={() => setShowCommanderMode(false)}
+              >
+                <button 
+                  className="cd-close-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowCommanderMode(false);
+                  }}
+                  aria-label="Cerrar modal"
+                >
+                  <X size={20} />
+                </button>
+                <div className="cd-title text-shadow">Daño Recibido<br/><span style={{fontSize: '0.8rem', fontWeight: 400}}>Toque: +1 | Mantener: -1</span></div>
+                <div className={`cd-table-view players-grid-${totalPlayers}`}>
+                  {Array.from({ length: totalPlayers }).map((_, i) => {
+                    if (i === index) {
+                      return <div key={i} className="cd-seat self-seat" />;
+                    }
+                    const opp = opponents.find(o => o.originalIndex === i);
+                    if (!opp) return <div key={i} className="cd-seat empty-seat" />;
+                    
+                    const dmg = player.commanderDamage[opp.id] || 0;
+                    return (
+                      <button 
+                        key={i} 
+                        className="cd-seat opp-seat text-shadow" 
+                        style={{ backgroundColor: `var(--color-${opp.color})` }}
+                        onPointerDown={(e) => {
+                          e.stopPropagation();
+                          startCdAdjusting(opp.id);
+                        }}
+                        onPointerUp={(e) => {
+                          e.stopPropagation();
+                          stopCdAdjusting(opp.id);
+                        }}
+                        onPointerLeave={(e) => {
+                          e.stopPropagation();
+                          stopCdAdjusting();
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        onContextMenu={(e) => e.preventDefault()}
+                      >
+                        <span className="cd-seat-val">{dmg}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            </>
           )}
 
           {!diceState?.active && renderDeadOverlay()}

@@ -151,7 +151,7 @@ body {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
 }
-.players-grid-3 .player-wrapper:nth-child(1) {
+.players-grid-3 > *:nth-child(1) {
   grid-column: span 2; /* takes full top row */
 }
 
@@ -166,13 +166,13 @@ body {
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 1fr 1fr;
 }
-.players-grid-5 .player-wrapper:nth-child(1),
-.players-grid-5 .player-wrapper:nth-child(2) {
+.players-grid-5 > *:nth-child(1),
+.players-grid-5 > *:nth-child(2) {
   grid-column: span 3;
 }
-.players-grid-5 .player-wrapper:nth-child(3),
-.players-grid-5 .player-wrapper:nth-child(4),
-.players-grid-5 .player-wrapper:nth-child(5) {
+.players-grid-5 > *:nth-child(3),
+.players-grid-5 > *:nth-child(4),
+.players-grid-5 > *:nth-child(5) {
   grid-column: span 2;
 }
 
@@ -187,12 +187,12 @@ body {
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr 1fr;
 }
-.players-grid-7 .player-wrapper:nth-child(1),
-.players-grid-7 .player-wrapper:nth-child(2),
-.players-grid-7 .player-wrapper:nth-child(3) {
+.players-grid-7 > *:nth-child(1),
+.players-grid-7 > *:nth-child(2),
+.players-grid-7 > *:nth-child(3) {
   grid-column: span 4;
 }
-.players-grid-7 .player-wrapper:nth-child(n+4) {
+.players-grid-7 > *:nth-child(n+4) {
   grid-column: span 3;
 }
 

@@ -28,6 +28,7 @@
   padding: 16px;
   position: relative;
   z-index: 10;
+  container-type: size;
 }
 
 /* Header */
@@ -43,7 +44,8 @@
   background: transparent;
   border: none;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 1.5rem;
+  font-size: 1.5rem; /* fallback */
+  font-size: clamp(0.9rem, 8cqmin, 1.8rem);
   font-weight: 800;
   font-family: inherit;
   width: 60%;
@@ -51,6 +53,9 @@
   border-bottom: 2px solid transparent;
   transition: border-color 0.2s;
   padding: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .player-name:focus {
@@ -114,7 +119,7 @@
   width: 40%;
   background: transparent;
   border: none;
-  color: rgba(255,255,255,0);
+  color: rgba(255,255,255,0.15); /* Subtle indicator */
   font-size: 5rem;
   font-weight: 300;
   cursor: pointer;
@@ -122,7 +127,6 @@
   align-items: center;
   transition: all 0.2s ease;
   outline: none;
-  /* Add touch action manipulation to disable double-tap zoom on iOS/Android */
   touch-action: manipulation;
 }
 
@@ -136,80 +140,164 @@
 .tap-right { justify-content: flex-end; padding-right: 24px; }
 
 /* Commander Damage Interface */
+.cd-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: auto;
+  background: transparent;
+  border: none;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
 .commander-damage-container {
   pointer-events: auto;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-radius: 20px;
-  padding: 20px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   animation: slideUpFade 0.3s ease-out forwards;
-  max-width: 90%;
-  width: 400px;
+  width: 95%;
+  max-width: 400px;
+  height: 90%;
+  max-height: 400px;
   border: 1px solid rgba(255,255,255,0.1);
+  z-index: 40;
+  position: relative;
 }
 
-.cd-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: center;
-  color: rgba(255,255,255,0.8);
-  margin-bottom: 8px;
-}
-
-.cd-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Change layout to rows if too many opponents? Max is 3 opponents (4 player game). Column is fine. */
-.cd-opponent {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 8px 16px;
-  border-radius: 12px;
-  border-left: 6px solid var(--opp-color);
-}
-
-.cd-opp-name {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.cd-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.cd-btn {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+.cd-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
   color: white;
-  border-radius: 8px;
-  width: 40px; height: 40px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 50;
+  transition: all 0.2s ease;
 }
 
-.cd-btn:active {
-  background: rgba(255,255,255,0.3);
+.cd-close-btn:active {
   transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.2);
 }
 
-.cd-val {
-  font-size: 1.8rem;
-  font-weight: 800;
-  width: 32px;
+.cd-title {
+  font-size: 1rem;
+  font-weight: 600;
   text-align: center;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 4px;
+}
+
+.cd-table-view {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  gap: 4px;
+  background-color: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.cd-seat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: none;
+  touch-action: manipulation;
+  outline: none;
+  overflow: hidden;
+  container-type: size;
+}
+
+.self-seat {
+  background-color: rgba(255,255,255,0.05);
+  border: 1px dashed rgba(255,255,255,0.2);
+}
+
+.empty-seat {
+  background-color: transparent;
+}
+
+.opp-seat {
+  color: white;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2), 0 4px 6px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.1s, filter 0.1s;
+}
+
+.opp-seat:active {
+  transform: scale(0.95);
+  filter: brightness(0.8);
+}
+
+
+
+.cd-seat-val {
+  font-size: min(1.5rem, 60cqw); /* Fallback */
+  font-size: min(50cqw, 60cqh);
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fix grid disposition for top/rotated players so the map looks visually identical everywhere */
+.rotate-180 .cd-table-view {
+  transform: rotate(180deg);
+}
+
+.rotate-180 .cd-seat-val {
+  transform: rotate(180deg);
+}
+
+/* Modulo aparte para pantallas grandes (Large Screens) */
+@media (min-width: 1024px) {
+  .commander-damage-container {
+    max-width: 800px;
+    height: auto;
+    max-height: 80vh;
+    padding: 24px;
+  }
+  .cd-title {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+  .cd-table-view {
+    gap: 16px;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+  }
+  .cd-seat {
+    aspect-ratio: 1;
+    border-radius: 16px;
+  }
+  .cd-seat-val {
+    font-size: 3.5rem;
+  }
 }
 
 /* Life Diff */
@@ -226,7 +314,8 @@
 }
 
 .life-value {
-  font-size: min(25vw, 180px);
+  font-size: min(25vw, 180px); /* fallback */
+  font-size: min(50cqw, 65cqh);
   font-weight: 800;
   line-height: 1;
 }
